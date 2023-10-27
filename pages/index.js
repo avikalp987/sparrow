@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Sidebar from '../components/Sidebar'
 import Feed from '../components/Feed'
+import Widjet from '../components/Widjet'
 
 export default function Home() {
   return (
@@ -17,6 +18,8 @@ export default function Home() {
 
         {/** feed */}
         <Feed />
+
+        <Widjet />
       </main>
       
     </div>
