@@ -1,6 +1,7 @@
 import { SearchIcon } from '@heroicons/react/outline'
 import React, { useState } from 'react'
 import News from './News'
+import { AnimatePresence,motion } from 'framer-motion';
 
 export default function Widjet({newsResults , randomUsersResults}) {
   const [articleNumber,setArticleNumber] = useState(3);
@@ -17,9 +18,18 @@ export default function Widjet({newsResults , randomUsersResults}) {
 
         <div className='text-gray-700 space-y-3 bg-gray-100 rounded-xl pt-2 w-[90%] xl:w-[75%] mr-3'>
           <h4 className='font-bold text-xl px-4'>What's Happening ...</h4>
+          <AnimatePresence>
           {newsResults.slice(0,articleNumber).map((article) => (
-          <News key={article.title} article={article}/>
+          <motion.div key={article.title}
+          initial={{opacity:0}}
+          animate={{opacity:1}}
+          exit={{opacity:0}}
+          transition={{duration:1}}
+          >
+            <News key={article.title} article={article}/>
+          </motion.div>
         ))}
+          </AnimatePresence>
         <button onClick={() => setArticleNumber(articleNumber+3)}
         className='text-blue-300 pl-4 pb-3 hover:text-blue-400'>Show More</button>
         </div>
@@ -27,8 +37,16 @@ export default function Widjet({newsResults , randomUsersResults}) {
         <div className='sticky top-16 text-color-gray-700 space-y-3 bg-gray-100 pt-2 rounded-xl w-[90%] xl:w-[75%]'>
           
           <h4 className='font-bold text-xl px-4'>Suggestions for you</h4>
+          <AnimatePresence>
           {randomUsersResults.slice(0,randomUserNumber).map((randomUser) => (
-            <div key={randomUser.login.username} className='flex items-center px-4 py-2 cursor-pointer hover:bg-gray-200'>
+            <motion.div 
+            key={randomUser.login.username}
+            initial={{opacity:0}}
+            animate={{opacity:1}}
+            exit={{opacity:0}}
+            transition={{duration:1}}
+            >
+              <div key={randomUser.login.username} className='flex items-center px-4 py-2 cursor-pointer hover:bg-gray-200 transition duration-500 ease-out'>
               <img src={randomUser.picture.thumbnail} alt="" width="40" className='rounded-full'/>
               <div className='truncate ml-4 leading-5'>
                 <h4 className='font-bold hover:underline text-[14px] truncate'>{randomUser.login.username}</h4>
@@ -36,7 +54,9 @@ export default function Widjet({newsResults , randomUsersResults}) {
               </div>
               <button className='ml-auto bg-black text-white rounded-full text-sm px-3.5 py-1.5 font-bold'>follow</button>
             </div>
+            </motion.div>
           ))}
+          </AnimatePresence>
           <button onClick={() => setRandomUserNumber(randomUserNumber+3)}
           className='text-blue-300 pl-4 pb-3 hover:text-blue-400'>Show More</button>
         </div>
