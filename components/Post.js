@@ -48,7 +48,10 @@ export default function Post({post}) {
     const deletePost = async ()=>{
         if(window.confirm("Want to delete this post ?")){
             await deleteDoc(doc(db,"posts",post.id));
+            if(post.data().image)
+            {
             await deleteObject(ref(storage, `posts/${post.id}/image`));
+            }
         }
     }
 
@@ -80,7 +83,10 @@ export default function Post({post}) {
 
 
             {/** post image */}
-            <img className="rounded-2xl mr-2 " src={post.data().image} alt="post image" />
+            
+            {post.data().image && (
+                <img className="rounded-2xl mr-2 " src={post.data().image} alt="post image" />
+            )} 
 
             {/** icons*/}
             <div className='flex items-center justify-between p-2 text-gray-500'>
