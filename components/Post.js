@@ -2,9 +2,10 @@ import { ChartBarIcon, ChatIcon, DotsHorizontalIcon, HeartIcon, ShareIcon, Trash
 import { collection, deleteDoc, doc, onSnapshot, setDoc } from 'firebase/firestore'
 import React, { useEffect, useState } from 'react'
 import Moment from 'react-moment'
-import { db } from '../firebase'
+import { db, storage } from '../firebase'
 import { signIn, useSession } from 'next-auth/react'
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/solid'
+import { deleteObject, ref } from 'firebase/storage'
 
 export default function Post({post}) {
 
@@ -44,6 +45,13 @@ export default function Post({post}) {
         
     }
 
+    const deletePost = async ()=>{
+        if(window.confirm("Want to delete this post ?")){
+            await deleteDoc(doc(db,"posts",post.id));
+            await deleteObject(ref(storage, `posts/${post.id}/image`));
+        }
+    }
+
 
 
   return (
@@ -77,7 +85,10 @@ export default function Post({post}) {
             {/** icons*/}
             <div className='flex items-center justify-between p-2 text-gray-500'>
                 <ChatIcon className='h-9 w-9 hoverEffect p-2  '/>
-                <TrashIcon className='h-9 w-9 hoverEffect p-2 ' />
+                {(session?.user.uid === post?.data().id) && (
+                    <TrashIcon onClick={deletePost}
+                    className='h-9 w-9 hoverEffect p-2 ' />
+                )}
                 <div className='flex items-center'>
                 {hasLiked ? (
                     <HeartIconFilled
