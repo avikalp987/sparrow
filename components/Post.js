@@ -7,7 +7,7 @@ import { signIn, useSession } from 'next-auth/react'
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/solid'
 import { deleteObject, ref } from 'firebase/storage'
 import { useRecoilState } from 'recoil'
-import { modalState } from '../atom/modalAtom'
+import { modalState, postIdState } from '../atom/modalAtom'
 
 export default function Post({post}) {
 
@@ -15,6 +15,7 @@ export default function Post({post}) {
     const [likes,setLikes] = useState([]);
     const [hasLiked,setHasLiked] = useState(false);
     const [open,setOpen] = useRecoilState(modalState);
+    const [postId,setPostId] = useRecoilState(postIdState);
 
     useEffect(()=>{
         const unsubscribe = onSnapshot(
@@ -94,7 +95,15 @@ export default function Post({post}) {
             {/** icons*/}
             <div className='flex items-center justify-between p-2 text-gray-500'>
                 <ChatIcon 
-                onClick={() => setOpen(!open)}
+                onClick={() => {
+                    if(!session)
+                    {
+                        signIn();
+                    }else{
+                        setPostId(post.id);
+                        setOpen(!open);
+                    }
+                }}
                 className='h-9 w-9 hoverEffect p-2  '/>
                 {(session?.user.uid === post?.data().id) && (
                     <TrashIcon onClick={deletePost}
