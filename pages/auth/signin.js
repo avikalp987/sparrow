@@ -7,7 +7,8 @@ export default function signin({providers}) {
        
        <div>
         {Object.values(providers).map((provider) => (
-            <div className='flex flex-col items-center justify-center'>
+            <div key={provider.name}
+            className='flex flex-col items-center justify-center'>
                 <img className='w-36 object-cover rounded-full'
                 src='https://thumb.silhouette-ac.com/t/0a/0abcbe0c4d9ff728f7453070a8937dba_t.jpeg' alt="" />
                 <p className='text-center text-sm italic my-20'>This app is created for learning and testing purposes</p>
