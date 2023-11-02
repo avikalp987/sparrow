@@ -80,7 +80,7 @@ export default function Input() {
             {selectedFile && (
                 <div className='relative'>
                     <XIcon onClick={() => setSelectedFile(null)}
-                    className='border border-white h-5 cursor-pointer text-white absolute m-1 rounded-full'/>
+                    className='border border-white h-5 cursor-pointer text-white absolute shadow-md shadow-white rounded-full'/>
                     <img className={`${loading && "animate-pulse"}`}
                     src={selectedFile} alt="" />
                 </div>
