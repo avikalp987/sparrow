@@ -7,18 +7,31 @@ import { ArrowLeftIcon } from '@heroicons/react/outline';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { db } from '../../firebase';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, onSnapshot, orderBy, query } from 'firebase/firestore';
+import Comment from '../../components/Comment';
+import { comment } from 'postcss';
 
 
 export default function PostPage({newsResults,randomUsersResults}) {
     const router = useRouter();
     const {id} = router.query;
     const [post,setPost] = useState(null);
+    const [comments,setComments] = useState([]);
 
     useEffect(
         () => onSnapshot(doc(db, "posts", id), (snapshot) => setPost(snapshot)),
         [db, id]
     );
+
+    useEffect(()=>{
+        onSnapshot(
+            query(collection(db,"posts",id,"comments"),
+            orderBy("timestamp","desc")
+            ),(snapshot) => {
+                setComments(snapshot.docs);
+            }
+        )
+    },[id,db])
 
 
   return (
@@ -44,9 +57,22 @@ export default function PostPage({newsResults,randomUsersResults}) {
             <h2 className='text-lg sm:text-xl font-bold cursor-pointer'>Post</h2>
             
         </div>
-
         <Post id={id} post={post}/>
+
+        {comments.length>0 && (
+            <div className=''>
+                {comments.map((comment) => (
+                <Comment 
+                key={comment.id} 
+                id={comment.id} 
+                comment={comment.data()}
+                />
+            ))}
+            </div>
+        )}
+        
     </div>
+
 
         {/** Widgets */}
         <Widjet newsResults={newsResults.articles} randomUsersResults={randomUsersResults.results}/>
